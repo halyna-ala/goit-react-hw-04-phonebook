@@ -1,28 +1,37 @@
+import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { nanoid } from 'nanoid';
 import { Input, InputContainer, ButtonSubmit, Form } from './ContactForm.styled';
 
-const ContactForm = ({ onSubmit }) => {
+function ContactForm ({ onSubmit }) {
 	const [name, setName] = useState('');
-	const [number, setNumber] = useState('');
+  const [number, setNumber] = useState('');
 
-	const handleInputChange = event => {
-		const { value } = event.currentTarget;
-event.currentTarget.name === 'name' ? setName(value) : setNumber(value);
+	const handleInputChange = evt => {
+		if (evt.target.name === 'name') {
+			 setName(evt.target.value);
+		  } 
+		  if (evt.target.name === 'number') {
+			setNumber(evt.target.value);
+		  }
 	};
 
 	const handleSubmit = event => {
 		event.preventDefault();
 
-		onSubmit(name, number);
-		reset();
+		const newContact = {
+			id: nanoid(),
+			name,
+			number,
+		  };
+		  onSubmit(newContact);
+		  reset();
 	};
 
-	const reset = () => {
-		setName('');
-		setNumber('');
-	}
-
-
+const reset = () => {
+	setName('');
+	setNumber('');
+}
 		return (
 			<Form onSubmit={handleSubmit}>
 				<InputContainer>
@@ -58,6 +67,8 @@ event.currentTarget.name === 'name' ? setName(value) : setNumber(value);
 		);
 	}
 
-
+	ContactForm.propTypes = {
+		onSubmit: PropTypes.func,
+	  };
 
 export default ContactForm;
